@@ -7,4 +7,5 @@ jobs:
       - uses: actions/checkout@v2
       - uses: giavancini/clang-format-github-action@v4
         with:
-          sources: "**/main.cpp"
+          style: file
+          sources: "*.cpp,*.h"
