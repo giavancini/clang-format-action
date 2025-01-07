@@ -1,11 +1,48 @@
-name: Clang Format Checker
-on: [push]
+name: "Clang format"
+
+on:
+  push:
+    branches:
+      - main
+      - autoformat
+  pull_request:
+    branches:
+      - main
+      - autoformat
 jobs:
-  clang-format-checking:
+  format:
     runs-on: ubuntu-latest
+
+    permissions:
+      # Give the default GITHUB_TOKEN write permission to commit and push the changed files back to the repository.
+      contents: write
+      
     steps:
-      - uses: actions/checkout@v2
-      - uses: giavancini/clang-format-github-action@v4
+      - uses: actions/checkout@v4
         with:
-          style: llvm
-          sources: "*.cpp,*.h"
+          fetch-depth: 2
+          ref: ${{ github.head_ref }}
+
+      - uses: jayllyz/clang-format-action@main
+        # Default options
+        with:
+          check: false
+          style: file
+          extensions: cpp,h,hpp,c
+          clang-version: latest
+
+      - name: add
+        shell: bash
+        run: "git add ."
+
+      - name: commit
+        shell: bash
+        run: "git commit -m 'chore(style): clang format files'"
+
+      # commit the changes (if there are any)
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore(style): clang format files"
+          push_options: '--force'
+          branch: ${{ github.head_ref }}
