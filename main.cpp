@@ -1,5 +1,5 @@
-       #include   <iostream>
-       #include <vector>
+        #include   <iostream>
+        #include <vector>
 
 void sum(int a,int b)
 {
@@ -7,6 +7,8 @@ void sum(int a,int b)
     std::cout<<c<<std::endl;
 }
 
+//   This is a comment
+// separated in two lines
 int main() {
         std::cout << "Hello, World!" << std::endl;
         #ifndef ZERO
@@ -15,5 +17,5 @@ int main() {
         int* ptr = &v[0];
         int& reallocf = v[0]   ;
         #endif
-    return 0;
+     return 0;
 }
