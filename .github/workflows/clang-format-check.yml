@@ -5,23 +5,25 @@ on:
     branches:
       - main
       - autoformat
+      - autoformat-fran
   pull_request:
     branches:
       - main
       - autoformat
+      - autoformat-fran
 jobs:
   format:
     runs-on: ubuntu-latest
-
     permissions:
       # Give the default GITHUB_TOKEN write permission to commit and push the changed files back to the repository.
       contents: write
-      
+
     steps:
       - uses: actions/checkout@v4
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ github.head_ref }}
           fetch-depth: 2
-          ref: ${{ github.ref }}
 
       - uses: jayllyz/clang-format-action@main
         # Default options
@@ -31,8 +33,11 @@ jobs:
           extensions: cpp,h,hpp,c
           clang-version: latest
 
+      - name: Fix .git owner
+        run: sudo chown runner:docker -R .git
       # commit the changes (if there are any)
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "chore(style): clang format files"
+          # branch: ${{ github.head_ref }}
